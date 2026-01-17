@@ -62,16 +62,26 @@
             padding: 15px;
             line-height: 1.4;
             z-index: 1;
-            opacity: 0; /* مخفي في البداية */
-            transition: opacity 0.3s ease;
+            opacity: 0;
+            transition: opacity 0.5s ease;
         }
         .content-text.revealed {
-            opacity: 1; /* يظهر بعد الكشط */
+            opacity: 1;
+        }
+        .scratch-overlay {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            z-index: 2;
         }
         .activity canvas {
             position: absolute;
             top: 0;
             left: 0;
+            width: 100%;
+            height: 100%;
             cursor: grab;
             filter: brightness(0.95) contrast(1.1) sepia(0.2);
         }
@@ -85,7 +95,7 @@
             font-weight: bold;
             text-shadow: 2px 2px 4px rgba(0,0,0,0.8);
             pointer-events: none;
-            z-index: 3;
+            transition: opacity 0.3s ease;
         }
         @media (max-width: 400px) {
             .activity-card { width: 300px; }
@@ -104,8 +114,10 @@
         <div class="activity-title">Activity 1</div>
         <div class="activity">
             <div class="content-text">نروح نتغدى بـ"لازورد" 🥰<br>مثل أول ديت بتاعنا</div>
-            <canvas></canvas>
-            <div class="scratch-text">اكشط هون!</div>
+            <div class="scratch-overlay">
+                <canvas></canvas>
+                <div class="scratch-text">اكشط هون!</div>
+            </div>
         </div>
     </div>
 
@@ -114,8 +126,10 @@
         <div class="activity-title">Activity 2</div>
         <div class="activity">
             <div class="content-text">هدية عيد ميلادك 🎁<br>مفاجأة خاصة بيكِ</div>
-            <canvas></canvas>
-            <div class="scratch-text">اكشط هون!</div>
+            <div class="scratch-overlay">
+                <canvas></canvas>
+                <div class="scratch-text">اكشط هون!</div>
+            </div>
         </div>
     </div>
 
@@ -124,8 +138,10 @@
         <div class="activity-title">Activity 3</div>
         <div class="activity">
             <div class="content-text">نلف بالسيارة ونغني سوا 🎶<br>أغانينا المفضلة</div>
-            <canvas></canvas>
-            <div class="scratch-text">اكشط هون!</div>
+            <div class="scratch-overlay">
+                <canvas></canvas>
+                <div class="scratch-text">اكشط هون!</div>
+            </div>
         </div>
     </div>
 
@@ -134,8 +150,10 @@
         <div class="activity-title">Activity 4</div>
         <div class="activity">
             <div class="content-text">نوخذ سبانيش لاتيه ☕<br>مع كيكة لذيذة</div>
-            <canvas></canvas>
-            <div class="scratch-text">اكشط هون!</div>
+            <div class="scratch-overlay">
+                <canvas></canvas>
+                <div class="scratch-text">اكشط هون!</div>
+            </div>
         </div>
     </div>
 
@@ -144,8 +162,10 @@
         <div class="activity-title">Activity 5</div>
         <div class="activity">
             <div class="content-text">نحضر فيديو سوا 📹<br>ع المطل مع الغروب</div>
-            <canvas></canvas>
-            <div class="scratch-text">اكشط هون!</div>
+            <div class="scratch-overlay">
+                <canvas></canvas>
+                <div class="scratch-text">اكشط هون!</div>
+            </div>
         </div>
     </div>
 
@@ -154,8 +174,10 @@
         <div class="activity-title">Activity 6</div>
         <div class="activity">
             <div class="content-text">نوكل دوناتس 🍩<br>أحلى دوناتس بالعالم</div>
-            <canvas></canvas>
-            <div class="scratch-text">اكشط هون!</div>
+            <div class="scratch-overlay">
+                <canvas></canvas>
+                <div class="scratch-text">اكشط هون!</div>
+            </div>
         </div>
     </div>
 
@@ -164,42 +186,52 @@
         <div class="activity-title">Activity 7</div>
         <div class="activity">
             <div class="content-text">نروح عنا على الدار 🏠<br>نرتاح ونستانس سوا</div>
-            <canvas></canvas>
-            <div class="scratch-text">اكشط هون!</div>
+            <div class="scratch-overlay">
+                <canvas></canvas>
+                <div class="scratch-text">اكشط هون!</div>
+            </div>
         </div>
     </div>
 
     <script>
-        document.querySelectorAll('.activity').forEach((card) => {
-            const canvas = card.querySelector('canvas');
-            const contentText = card.querySelector('.content-text');
+        document.querySelectorAll('.scratch-overlay').forEach((overlay) => {
+            const canvas = overlay.querySelector('canvas');
+            const contentText = overlay.parentElement.querySelector('.content-text');
+            const scratchText = overlay.querySelector('.scratch-text');
             const ctx = canvas.getContext('2d');
-            const rect = card.getBoundingClientRect();
-            canvas.width = rect.width;
-            canvas.height = rect.height;
-
-            // طبقة رمادية مموجة مع noise
-            const gradient = ctx.createLinearGradient(0, 0, canvas.width, canvas.height);
-            gradient.addColorStop(0,   '#c0c0c0');
-            gradient.addColorStop(0.3, '#a0a0a0');
-            gradient.addColorStop(0.7, '#909090');
-            gradient.addColorStop(1,   '#b0b0b0');
-            ctx.fillStyle = gradient;
-            ctx.fillRect(0, 0, canvas.width, canvas.height);
-
-            // Noise خفيف للواقعية
-            ctx.fillStyle = 'rgba(255,255,255,0.12)';
-            for (let i = 0; i < 220; i++) {
-                const x = Math.random() * canvas.width;
-                const y = Math.random() * canvas.height;
-                ctx.beginPath();
-                ctx.arc(x, y, Math.random() * 2, 0, 2 * Math.PI);
-                ctx.fill();
+            
+            function resizeCanvas() {
+                canvas.width = overlay.offsetWidth;
+                canvas.height = overlay.offsetHeight;
+                drawScratchLayer();
             }
+            
+            function drawScratchLayer() {
+                const gradient = ctx.createLinearGradient(0, 0, canvas.width, canvas.height);
+                gradient.addColorStop(0,   '#c0c0c0');
+                gradient.addColorStop(0.3, '#a0a0a0');
+                gradient.addColorStop(0.7, '#909090');
+                gradient.addColorStop(1,   '#b0b0b0');
+                ctx.fillStyle = gradient;
+                ctx.fillRect(0, 0, canvas.width, canvas.height);
+
+                // Noise خفيف
+                ctx.fillStyle = 'rgba(255,255,255,0.12)';
+                for (let i = 0; i < 220; i++) {
+                    const x = Math.random() * canvas.width;
+                    const y = Math.random() * canvas.height;
+                    ctx.beginPath();
+                    ctx.arc(x, y, Math.random() * 2, 0, 2 * Math.PI);
+                    ctx.fill();
+                }
+            }
+
+            resizeCanvas();
+            window.addEventListener('resize', resizeCanvas);
 
             let scratchedArea = 0;
             let isDrawing = false;
-            const scratchThreshold = 0.4; // نسبة الكشط المطلوبة (40%)
+            const scratchThreshold = 0.35;
 
             function getPos(e) {
                 const rect = canvas.getBoundingClientRect();
@@ -215,15 +247,20 @@
                 ctx.arc(x, y, 25, 0, 2 * Math.PI);
                 ctx.fill();
                 
-                // حساب مساحة الكشط
                 scratchedArea += Math.PI * 25 * 25;
             }
 
-            function checkScratchedEnough() {
+            function checkProgress() {
                 const totalArea = canvas.width * canvas.height;
-                if (scratchedArea / totalArea > scratchThreshold) {
-                    canvas.style.opacity = '0.3'; // شفافية خفيفة
-                    contentText.classList.add('revealed'); // إظهار النص
+                const progress = scratchedArea / totalArea;
+                
+                // شفافية تدريجية للكشط و"اكشط هون"
+                canvas.style.opacity = Math.max(0.2, 1 - progress * 3);
+                scratchText.style.opacity = Math.max(0, 1 - progress * 3);
+                
+                // إظهار المحتوى لما الكشط يكفي
+                if (progress > scratchThreshold) {
+                    contentText.classList.add('revealed');
                 }
             }
 
@@ -232,8 +269,10 @@
                     isDrawing = true;
                     e.preventDefault();
                     const pos = getPos(e);
-                    scratch(pos.x, pos.y);
-                    checkScratchedEnough();
+                    if (pos.x > 0 && pos.y > 0 && pos.x < canvas.width && pos.y < canvas.height) {
+                        scratch(pos.x, pos.y);
+                        checkProgress();
+                    }
                 });
             });
 
@@ -242,8 +281,10 @@
                     if (!isDrawing) return;
                     e.preventDefault();
                     const pos = getPos(e);
-                    scratch(pos.x, pos.y);
-                    checkScratchedEnough();
+                    if (pos.x > 0 && pos.y > 0 && pos.x < canvas.width && pos.y < canvas.height) {
+                        scratch(pos.x, pos.y);
+                        checkProgress();
+                    }
                 });
             });
 

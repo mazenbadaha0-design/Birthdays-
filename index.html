@@ -100,8 +100,6 @@
             pointer-events: none;
             transition: opacity 0.5s ease;
         }
-        
-        /* احتفال كامل الصفحة */
         .celebration {
             position: fixed;
             top: 0;
@@ -141,12 +139,12 @@
             text-shadow: 0 0 20px #ffd700;
             animation: bounce 1s ease-in-out infinite;
             pointer-events: none;
+            text-align: center;
         }
         @keyframes bounce {
             0%, 100% { transform: translate(-50%, -50%) scale(1); }
             50% { transform: translate(-50%, -50%) scale(1.2); }
         }
-        
         @media (max-width: 400px) {
             .activity-card { width: 300px; }
             .activity { height: 160px; }
@@ -160,7 +158,7 @@
 <body>
     <h1>عيد ميلاد سعيد يا قلبي! اكشطي كل Activity واكتشفي اليوم المثالي 💕</h1>
 
-    <!-- الـ7 Activities -->
+    <!-- Activity 1 -->
     <div class="activity-card">
         <div class="activity-title">Activity 1</div>
         <div class="activity">
@@ -171,8 +169,79 @@
             </div>
         </div>
     </div>
-    <!-- باقي الـActivities نفس الشكل... -->
-    
+
+    <!-- Activity 2 -->
+    <div class="activity-card">
+        <div class="activity-title">Activity 2</div>
+        <div class="activity">
+            <div class="content-text">هدية عيد ميلادك 🎁<br>مفاجأة خاصة بيكِ</div>
+            <div class="scratch-overlay">
+                <canvas></canvas>
+                <div class="scratch-text">اكشط هون!</div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Activity 3 -->
+    <div class="activity-card">
+        <div class="activity-title">Activity 3</div>
+        <div class="activity">
+            <div class="content-text">نلف بالسيارة ونغني سوا 🎶<br>أغانينا المفضلة</div>
+            <div class="scratch-overlay">
+                <canvas></canvas>
+                <div class="scratch-text">اكشط هون!</div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Activity 4 -->
+    <div class="activity-card">
+        <div class="activity-title">Activity 4</div>
+        <div class="activity">
+            <div class="content-text">نوخذ سبانيش لاتيه ☕<br>مع كيكة لذيذة</div>
+            <div class="scratch-overlay">
+                <canvas></canvas>
+                <div class="scratch-text">اكشط هون!</div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Activity 5 -->
+    <div class="activity-card">
+        <div class="activity-title">Activity 5</div>
+        <div class="activity">
+            <div class="content-text">نحضر فيديو سوا 📹<br>ع المطل مع الغروب</div>
+            <div class="scratch-overlay">
+                <canvas></canvas>
+                <div class="scratch-text">اكشط هون!</div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Activity 6 -->
+    <div class="activity-card">
+        <div class="activity-title">Activity 6</div>
+        <div class="activity">
+            <div class="content-text">نوكل دوناتس 🍩<br>أحلى دوناتس بالعالم</div>
+            <div class="scratch-overlay">
+                <canvas></canvas>
+                <div class="scratch-text">اكشط هون!</div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Activity 7 -->
+    <div class="activity-card">
+        <div class="activity-title">Activity 7</div>
+        <div class="activity">
+            <div class="content-text">نروح عنا على الدار 🏠<br>نرتاح ونستانس سوا</div>
+            <div class="scratch-overlay">
+                <canvas></canvas>
+                <div class="scratch-text">اكشط هون!</div>
+            </div>
+        </div>
+    </div>
+
     <!-- Celebration Overlay -->
     <div class="celebration" id="celebration">
         <div class="celebration-text">🎉 انكشفت كل المفاجآت! 🎉<br>عيد ميلاد سعيد يا قلبي 💖</div>
@@ -239,11 +308,9 @@
                 contentText.classList.add('revealed');
                 overlay.style.pointerEvents = 'none';
                 
-                // احتفال لكل activity
+                completedActivities++;
                 createFirework(overlay);
                 
-                // عداد الـactivities المكتملة
-                completedActivities++;
                 if (completedActivities === totalActivities) {
                     setTimeout(() => showFinalCelebration(), 500);
                 }
@@ -256,7 +323,6 @@
                 firework.style.left = rect.left + rect.width / 2 + 'px';
                 firework.style.top = rect.top + rect.height / 2 + 'px';
                 document.body.appendChild(firework);
-                
                 setTimeout(() => firework.remove(), 1500);
             }
 
@@ -281,7 +347,6 @@
                 }
             }
 
-            // Mouse & Touch events (نفس الكود السابق)
             canvas.addEventListener('mousedown', (e) => {
                 if (isRevealed) return;
                 isDrawing = true;
@@ -324,8 +389,6 @@
 
         function showFinalCelebration() {
             celebration.classList.add('show');
-            
-            // ألعاب نارية كثيرة
             for (let i = 0; i < 30; i++) {
                 setTimeout(() => {
                     const firework = document.createElement('div');

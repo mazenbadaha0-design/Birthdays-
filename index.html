@@ -63,10 +63,10 @@
             line-height: 1.4;
             z-index: 1;
             opacity: 0;
-            transition: opacity 0.5s ease;
+            transition: opacity 0.8s ease;
         }
         .content-text.revealed {
-            opacity: 1;
+            opacity: 1 !important;
         }
         .scratch-overlay {
             position: absolute;
@@ -75,6 +75,7 @@
             width: 100%;
             height: 100%;
             z-index: 2;
+            transition: opacity 0.5s ease;
         }
         .activity canvas {
             position: absolute;
@@ -95,7 +96,7 @@
             font-weight: bold;
             text-shadow: 2px 2px 4px rgba(0,0,0,0.8);
             pointer-events: none;
-            transition: opacity 0.3s ease;
+            transition: opacity 0.5s ease;
         }
         @media (max-width: 400px) {
             .activity-card { width: 300px; }
@@ -194,28 +195,35 @@
     </div>
 
     <script>
-        document.querySelectorAll('.scratch-overlay').forEach((overlay) => {
+        document.querySelectorAll('.scratch-overlay').forEach((overlay, index) => {
             const canvas = overlay.querySelector('canvas');
             const contentText = overlay.parentElement.querySelector('.content-text');
             const scratchText = overlay.querySelector('.scratch-text');
             const ctx = canvas.getContext('2d');
             
+            let isDrawing = false;
+            let strokeCount = 0; // عداد الضربات بدل حساب المساحة
+            
             function resizeCanvas() {
-                canvas.width = overlay.offsetWidth;
-                canvas.height = overlay.offsetHeight;
+                const rect = overlay.getBoundingClientRect();
+                canvas.width = rect.width;
+                canvas.height = rect.height;
                 drawScratchLayer();
             }
             
             function drawScratchLayer() {
+                ctx.clearRect(0, 0, canvas.width, canvas.height);
+                
+                // الطبقة الرمادية
                 const gradient = ctx.createLinearGradient(0, 0, canvas.width, canvas.height);
-                gradient.addColorStop(0,   '#c0c0c0');
+                gradient.addColorStop(0, '#c0c0c0');
                 gradient.addColorStop(0.3, '#a0a0a0');
                 gradient.addColorStop(0.7, '#909090');
-                gradient.addColorStop(1,   '#b0b0b0');
+                gradient.addColorStop(1, '#b0b0b0');
                 ctx.fillStyle = gradient;
                 ctx.fillRect(0, 0, canvas.width, canvas.height);
 
-                // Noise خفيف
+                // Noise
                 ctx.fillStyle = 'rgba(255,255,255,0.12)';
                 for (let i = 0; i < 220; i++) {
                     const x = Math.random() * canvas.width;
@@ -229,70 +237,82 @@
             resizeCanvas();
             window.addEventListener('resize', resizeCanvas);
 
-            let scratchedArea = 0;
-            let isDrawing = false;
-            const scratchThreshold = 0.70;
-
             function getPos(e) {
                 const rect = canvas.getBoundingClientRect();
                 return {
-                    x: (e.clientX || (e.touches && e.touches[0].clientX) || 0) - rect.left,
-                    y: (e.clientY || (e.touches && e.touches[0].clientY) || 0) - rect.top
+                    x: (e.clientX || e.touches[0].clientX) - rect.left,
+                    y: (e.clientY || e.touches[0].clientY) - rect.top
                 };
             }
 
             function scratch(x, y) {
                 ctx.globalCompositeOperation = 'destination-out';
+                ctx.lineWidth = 50;
+                ctx.lineCap = 'round';
+                ctx.lineJoin = 'round';
                 ctx.beginPath();
-                ctx.arc(x, y, 25, 0, 2 * Math.PI);
+                ctx.arc(x, y, 30, 0, 2 * Math.PI);
                 ctx.fill();
-                
-                scratchedArea += Math.PI * 25 * 25;
             }
 
             function checkProgress() {
-                const totalArea = canvas.width * canvas.height;
-                const progress = scratchedArea / totalArea;
+                const progress = strokeCount / 25; // 25 ضربة = 70% تقريباً
                 
-                // شفافية تدريجية للكشط و"اكشط هون"
-                canvas.style.opacity = Math.max(0.2, 1 - progress * 3);
-                scratchText.style.opacity = Math.max(0, 1 - progress * 3);
+                // شفافية تدريجية
+                const fade = Math.max(0.1, 1 - progress * 0.04);
+                overlay.style.opacity = fade;
+                scratchText.style.opacity = fade;
                 
-                // إظهار المحتوى لما الكشط يكفي
-                if (progress > scratchThreshold) {
+                // كشط كافي = 70%
+                if (strokeCount > 25) {
                     contentText.classList.add('revealed');
+                    overlay.style.pointerEvents = 'none'; // تعطيل الكشط
                 }
             }
 
-            ['mousedown', 'touchstart'].forEach(ev => {
-                canvas.addEventListener(ev, (e) => {
-                    isDrawing = true;
-                    e.preventDefault();
-                    const pos = getPos(e);
-                    if (pos.x > 0 && pos.y > 0 && pos.x < canvas.width && pos.y < canvas.height) {
-                        scratch(pos.x, pos.y);
-                        checkProgress();
-                    }
-                });
+            // Mouse events
+            canvas.addEventListener('mousedown', (e) => {
+                isDrawing = true;
+                e.preventDefault();
+                const pos = getPos(e);
+                strokeCount++;
+                scratch(pos.x, pos.y);
+                checkProgress();
             });
 
-            ['mousemove', 'touchmove'].forEach(ev => {
-                canvas.addEventListener(ev, (e) => {
-                    if (!isDrawing) return;
-                    e.preventDefault();
-                    const pos = getPos(e);
-                    if (pos.x > 0 && pos.y > 0 && pos.x < canvas.width && pos.y < canvas.height) {
-                        scratch(pos.x, pos.y);
-                        checkProgress();
-                    }
-                });
+            canvas.addEventListener('mousemove', (e) => {
+                if (!isDrawing) return;
+                e.preventDefault();
+                const pos = getPos(e);
+                strokeCount++;
+                scratch(pos.x, pos.y);
+                checkProgress();
             });
 
-            ['mouseup', 'mouseleave', 'touchend', 'touchcancel'].forEach(ev => {
-                canvas.addEventListener(ev, () => {
-                    isDrawing = false;
-                });
+            canvas.addEventListener('mouseup', () => isDrawing = false);
+            canvas.addEventListener('mouseleave', () => isDrawing = false);
+
+            // Touch events
+            canvas.addEventListener('touchstart', (e) => {
+                isDrawing = true;
+                e.preventDefault();
+                const pos = getPos(e);
+                strokeCount++;
+                scratch(pos.x, pos.y);
+                checkProgress();
             });
+
+            canvas.addEventListener('touchmove', (e) => {
+                if (!isDrawing) return;
+                e.preventDefault();
+                const pos = getPos(e);
+                strokeCount++;
+                scratch(pos.x, pos.y);
+                checkProgress();
+            });
+
+            canvas.addEventListener('touchend', () => isDrawing = false);
+            canvas.addEventListener('touchcancel', () => isDrawing = false);
         });
     </script>
 </body>

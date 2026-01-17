@@ -21,14 +21,15 @@
             color: #fff;
             text-align: center;
             text-shadow: 2px 2px 4px rgba(0,0,0,0.3);
-            margin-bottom: 20px;
+            margin-bottom: 30px;
+            font-size: 28px;
         }
         .activity-card {
             background: rgba(255,255,255,0.9);
             border-radius: 20px;
             padding: 15px 15px 20px;
-            margin: 10px 0;
-            width: 320px;
+            margin: 12px 0;
+            width: 340px;
             box-shadow: 0 10px 30px rgba(0,0,0,0.2);
         }
         .activity-title {
@@ -43,7 +44,7 @@
         .activity {
             position: relative;
             width: 100%;
-            height: 200px;
+            height: 180px;
             border: 3px solid #fff;
             border-radius: 16px;
             overflow: hidden;
@@ -55,10 +56,10 @@
             left: 50%;
             transform: translate(-50%, -50%);
             color: #fff;
-            font-size: 16px;
+            font-size: 15px;
             font-weight: bold;
             text-align: center;
-            padding: 20px;
+            padding: 15px;
             line-height: 1.4;
             z-index: 1;
         }
@@ -75,32 +76,31 @@
             left: 50%;
             transform: translate(-50%, -50%);
             color: #fff;
-            font-size: 22px;
+            font-size: 20px;
             font-weight: bold;
             text-shadow: 2px 2px 4px rgba(0,0,0,0.5);
             pointer-events: none;
             z-index: 2;
         }
         @media (max-width: 400px) {
-            .activity-card { width: 280px; }
-            .activity { height: 170px; }
+            .activity-card { width: 300px; }
+            .activity { height: 160px; }
             .scratch-text { font-size: 18px; }
-            .content-text { font-size: 14px; padding: 15px; }
+            .content-text { font-size: 13px; padding: 12px; }
+            h1 { font-size: 24px; }
         }
     </style>
 </head>
 <body>
-    <h1>عيد ميلاد سعيد يا قلبي! اكشطي كل Activity واكتشفي المفاجآت 💕</h1>
+    <h1>عيد ميلاد سعيد يا قلبي! اكشطي كل Activity واكتشفي اليوم المثالي 💕</h1>
 
     <!-- Activity 1 -->
     <div class="activity-card">
         <div class="activity-title">Activity 1</div>
         <div class="activity">
-            <div class="content-text">
-                نروح نتغدى بـ"لازورد" <br>مثل أول ديت 💕
-            </div>
+            <div class="content-text">نروح نتغدى بـ"لازورد" 🥰<br>مثل أول ديت بتاعنا</div>
             <canvas></canvas>
-            <div class="scratch-text">اكشطي لتعرفي وين! 🥰</div>
+            <div class="scratch-text">اكشطي لتعرفي! 💕</div>
         </div>
     </div>
 
@@ -108,10 +108,7 @@
     <div class="activity-card">
         <div class="activity-title">Activity 2</div>
         <div class="activity">
-            <div class="content-text">
-                هدية عيد ميلادك 🎁<br>
-                مفاجأة خاصة بيكِ 💝
-            </div>
+            <div class="content-text">هدية عيد ميلادك 🎁<br>مفاجأة خاصة بيكِ</div>
             <canvas></canvas>
             <div class="scratch-text">اكشطي لتعرفي إيش! 🎁</div>
         </div>
@@ -121,10 +118,7 @@
     <div class="activity-card">
         <div class="activity-title">Activity 3</div>
         <div class="activity">
-            <div class="content-text">
-                نلف بالسيارة ونغني سوا 🎶<br>
-                أغانينا المفضلة 👫
-            </div>
+            <div class="content-text">نلف بالسيارة ونغني سوا 🎶<br>أغانينا المفضلة</div>
             <canvas></canvas>
             <div class="scratch-text">اكشطي لتعرفي التفاصيل! 🚗</div>
         </div>
@@ -134,12 +128,39 @@
     <div class="activity-card">
         <div class="activity-title">Activity 4</div>
         <div class="activity">
-            <div class="content-text">
-                نحضر فيديو سوا 📹<br>
-                ذكرى حلوة مع بعض 💖
-            </div>
+            <div class="content-text">نوخذ سبانيش لاتيه ☕<br>مع كيكة لذيذة</div>
             <canvas></canvas>
-            <div class="scratch-text">اكشطي لتعرفي الفيديو! 🎥</div>
+            <div class="scratch-text">اكشطي واشربي! ☕</div>
+        </div>
+    </div>
+
+    <!-- Activity 5 -->
+    <div class="activity-card">
+        <div class="activity-title">Activity 5</div>
+        <div class="activity">
+            <div class="content-text">نحضر فيديو سوا 📹<br>ع المطل مع الغروب</div>
+            <canvas></canvas>
+            <div class="scratch-text">اكشطي لتعرفي الفيديو! 🌅</div>
+        </div>
+    </div>
+
+    <!-- Activity 6 -->
+    <div class="activity-card">
+        <div class="activity-title">Activity 6</div>
+        <div class="activity">
+            <div class="content-text">نوكل دوناتس 🍩<br>أحلى دوناتس بالعالم</div>
+            <canvas></canvas>
+            <div class="scratch-text">اكشطي وكلي! 🍩</div>
+        </div>
+    </div>
+
+    <!-- Activity 7 -->
+    <div class="activity-card">
+        <div class="activity-title">Activity 7</div>
+        <div class="activity">
+            <div class="content-text">نروح عنا على الدار 🏠<br>نرتاح ونستانس سوا</div>
+            <canvas></canvas>
+            <div class="scratch-text">النهاية الحلوة! 🏠</div>
         </div>
     </div>
 
@@ -172,7 +193,7 @@
 
             // نص اكشط أسود عشان يبان على الرمادي
             ctx.fillStyle = '#000';
-            ctx.font = 'bold 22px Arial';
+            ctx.font = 'bold 20px Arial';
             ctx.textAlign = 'center';
             ctx.textBaseline = 'middle';
             ctx.fillText('اكشط هون!', canvas.width / 2, canvas.height / 2);

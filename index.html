@@ -1,0 +1,223 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>عيد ميلاد سعيد يا حبيبتي! 💖</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background: linear-gradient(135deg, #ff9a9e, #fecfef);
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+            margin: 0;
+            padding: 20px;
+            user-select: none;
+        }
+        h1 {
+            color: #fff;
+            text-align: center;
+            text-shadow: 2px 2px 4px rgba(0,0,0,0.3);
+            margin-bottom: 20px;
+        }
+        .activity-card {
+            background: rgba(255,255,255,0.9);
+            border-radius: 20px;
+            padding: 15px 15px 20px;
+            margin: 10px 0;
+            width: 320px;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.2);
+        }
+        .activity-title {
+            background: #ff8fb1;
+            color: #fff;
+            border-radius: 12px;
+            padding: 8px 12px;
+            font-weight: bold;
+            text-align: center;
+            margin-bottom: 10px;
+        }
+        .activity {
+            position: relative;
+            width: 100%;
+            height: 200px;
+            border: 3px solid #fff;
+            border-radius: 16px;
+            overflow: hidden;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+        }
+        .content-text {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            color: #fff;
+            font-size: 16px;
+            font-weight: bold;
+            text-align: center;
+            padding: 20px;
+            line-height: 1.4;
+            z-index: 1;
+        }
+        .activity canvas {
+            position: absolute;
+            top: 0;
+            left: 0;
+            cursor: grab;
+            filter: brightness(0.95) contrast(1.1) sepia(0.2);
+        }
+        .scratch-text {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            color: #fff;
+            font-size: 22px;
+            font-weight: bold;
+            text-shadow: 2px 2px 4px rgba(0,0,0,0.5);
+            pointer-events: none;
+            z-index: 2;
+        }
+        @media (max-width: 400px) {
+            .activity-card { width: 280px; }
+            .activity { height: 170px; }
+            .scratch-text { font-size: 18px; }
+            .content-text { font-size: 14px; padding: 15px; }
+        }
+    </style>
+</head>
+<body>
+    <h1>عيد ميلاد سعيد يا قلبي! اكشطي كل Activity واكتشفي المفاجآت 💕</h1>
+
+    <!-- Activity 1 -->
+    <div class="activity-card">
+        <div class="activity-title">Activity 1</div>
+        <div class="activity">
+            <div class="content-text">
+                نروح نتغدى بـ"لازورد" <br>مثل أول ديت 💕
+            </div>
+            <canvas></canvas>
+            <div class="scratch-text">اكشطي لتعرفي وين! 🥰</div>
+        </div>
+    </div>
+
+    <!-- Activity 2 -->
+    <div class="activity-card">
+        <div class="activity-title">Activity 2</div>
+        <div class="activity">
+            <div class="content-text">
+                هدية عيد ميلادك 🎁<br>
+                مفاجأة خاصة بيكِ 💝
+            </div>
+            <canvas></canvas>
+            <div class="scratch-text">اكشطي لتعرفي إيش! 🎁</div>
+        </div>
+    </div>
+
+    <!-- Activity 3 -->
+    <div class="activity-card">
+        <div class="activity-title">Activity 3</div>
+        <div class="activity">
+            <div class="content-text">
+                نلف بالسيارة ونغني سوا 🎶<br>
+                أغانينا المفضلة 👫
+            </div>
+            <canvas></canvas>
+            <div class="scratch-text">اكشطي لتعرفي التفاصيل! 🚗</div>
+        </div>
+    </div>
+
+    <!-- Activity 4 -->
+    <div class="activity-card">
+        <div class="activity-title">Activity 4</div>
+        <div class="activity">
+            <div class="content-text">
+                نحضر فيديو سوا 📹<br>
+                ذكرى حلوة مع بعض 💖
+            </div>
+            <canvas></canvas>
+            <div class="scratch-text">اكشطي لتعرفي الفيديو! 🎥</div>
+        </div>
+    </div>
+
+    <script>
+        document.querySelectorAll('.activity').forEach((card) => {
+            const canvas = card.querySelector('canvas');
+            const ctx = canvas.getContext('2d');
+            const rect = card.getBoundingClientRect();
+            canvas.width = rect.width;
+            canvas.height = rect.height;
+
+            // طبقة رمادية مموجة مع noise
+            const gradient = ctx.createLinearGradient(0, 0, canvas.width, canvas.height);
+            gradient.addColorStop(0,   '#c0c0c0');
+            gradient.addColorStop(0.3, '#a0a0a0');
+            gradient.addColorStop(0.7, '#909090');
+            gradient.addColorStop(1,   '#b0b0b0');
+            ctx.fillStyle = gradient;
+            ctx.fillRect(0, 0, canvas.width, canvas.height);
+
+            // Noise خفيف للواقعية
+            ctx.fillStyle = 'rgba(255,255,255,0.12)';
+            for (let i = 0; i < 220; i++) {
+                const x = Math.random() * canvas.width;
+                const y = Math.random() * canvas.height;
+                ctx.beginPath();
+                ctx.arc(x, y, Math.random() * 2, 0, 2 * Math.PI);
+                ctx.fill();
+            }
+
+            // نص اكشط أسود عشان يبان على الرمادي
+            ctx.fillStyle = '#000';
+            ctx.font = 'bold 22px Arial';
+            ctx.textAlign = 'center';
+            ctx.textBaseline = 'middle';
+            ctx.fillText('اكشط هون!', canvas.width / 2, canvas.height / 2);
+
+            let isDrawing = false;
+
+            function getPos(e) {
+                const rect = canvas.getBoundingClientRect();
+                return {
+                    x: (e.clientX || (e.touches && e.touches[0].clientX) || 0) - rect.left,
+                    y: (e.clientY || (e.touches && e.touches[0].clientY) || 0) - rect.top
+                };
+            }
+
+            function scratch(x, y) {
+                ctx.globalCompositeOperation = 'destination-out';
+                ctx.beginPath();
+                ctx.arc(x, y, 25, 0, 2 * Math.PI);
+                ctx.fill();
+            }
+
+            ['mousedown', 'touchstart'].forEach(ev => {
+                canvas.addEventListener(ev, (e) => {
+                    isDrawing = true;
+                    e.preventDefault();
+                    const pos = getPos(e);
+                    scratch(pos.x, pos.y);
+                });
+            });
+
+            ['mousemove', 'touchmove'].forEach(ev => {
+                canvas.addEventListener(ev, (e) => {
+                    if (!isDrawing) return;
+                    e.preventDefault();
+                    const pos = getPos(e);
+                    scratch(pos.x, pos.y);
+                });
+            });
+
+            ['mouseup', 'mouseleave', 'touchend', 'touchcancel'].forEach(ev => {
+                canvas.addEventListener(ev, () => {
+                    isDrawing = false;
+                });
+            });
+        });
+    </script>
+</body>
+</html>

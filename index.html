@@ -100,6 +100,8 @@
             pointer-events: none;
             transition: opacity 0.5s ease;
         }
+        
+        /* Party Confetti Effect */
         .celebration {
             position: fixed;
             top: 0;
@@ -109,24 +111,32 @@
             pointer-events: none;
             z-index: 1000;
             opacity: 0;
-            transition: opacity 0.5s ease;
         }
         .celebration.show {
             opacity: 1;
         }
-        .fireworks {
+        .confetti {
             position: absolute;
-            width: 10px;
-            height: 10px;
+            width: 12px;
+            height: 12px;
             background: #ffd700;
-            border-radius: 50%;
+            animation: confetti-fall 3s linear infinite;
             pointer-events: none;
-            animation: fireworks 1.5s ease-out infinite;
+            transform-origin: center;
         }
-        @keyframes fireworks {
-            0% { transform: scale(0); opacity: 1; }
-            50% { opacity: 1; }
-            100% { transform: scale(3) translateY(-100px); opacity: 0; }
+        .confetti:nth-child(odd) { background: #ff6b9d; }
+        .confetti:nth-child(3n) { background: #4ecdc4; }
+        .confetti:nth-child(4n) { background: #45b7d1; }
+        .confetti:nth-child(5n) { background: #f9ca24; }
+        @keyframes confetti-fall {
+            0% {
+                transform: translateY(-100vh) rotate(0deg);
+                opacity: 1;
+            }
+            100% {
+                transform: translateY(100vh) rotate(720deg);
+                opacity: 0;
+            }
         }
         .celebration-text {
             position: absolute;
@@ -140,25 +150,30 @@
             animation: bounce 1s ease-in-out infinite;
             pointer-events: none;
             text-align: center;
+            background: rgba(255,255,255,0.9);
+            padding: 20px 40px;
+            border-radius: 30px;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.3);
         }
         @keyframes bounce {
             0%, 100% { transform: translate(-50%, -50%) scale(1); }
-            50% { transform: translate(-50%, -50%) scale(1.2); }
+            50% { transform: translate(-50%, -50%) scale(1.1); }
         }
+        
         @media (max-width: 400px) {
             .activity-card { width: 300px; }
             .activity { height: 160px; }
             .scratch-text { font-size: 18px; }
             .content-text { font-size: 13px; padding: 12px; }
             h1 { font-size: 24px; }
-            .celebration-text { font-size: 28px; }
+            .celebration-text { font-size: 28px; padding: 15px 25px; }
         }
     </style>
 </head>
 <body>
     <h1>عيد ميلاد سعيد يا قلبي! اكشطي كل Activity واكتشفي اليوم المثالي 💕</h1>
 
-    <!-- Activity 1 -->
+    <!-- الـ7 Activities كاملة -->
     <div class="activity-card">
         <div class="activity-title">Activity 1</div>
         <div class="activity">
@@ -170,7 +185,6 @@
         </div>
     </div>
 
-    <!-- Activity 2 -->
     <div class="activity-card">
         <div class="activity-title">Activity 2</div>
         <div class="activity">
@@ -182,7 +196,6 @@
         </div>
     </div>
 
-    <!-- Activity 3 -->
     <div class="activity-card">
         <div class="activity-title">Activity 3</div>
         <div class="activity">
@@ -194,7 +207,6 @@
         </div>
     </div>
 
-    <!-- Activity 4 -->
     <div class="activity-card">
         <div class="activity-title">Activity 4</div>
         <div class="activity">
@@ -206,7 +218,6 @@
         </div>
     </div>
 
-    <!-- Activity 5 -->
     <div class="activity-card">
         <div class="activity-title">Activity 5</div>
         <div class="activity">
@@ -218,7 +229,6 @@
         </div>
     </div>
 
-    <!-- Activity 6 -->
     <div class="activity-card">
         <div class="activity-title">Activity 6</div>
         <div class="activity">
@@ -230,7 +240,6 @@
         </div>
     </div>
 
-    <!-- Activity 7 -->
     <div class="activity-card">
         <div class="activity-title">Activity 7</div>
         <div class="activity">
@@ -242,7 +251,7 @@
         </div>
     </div>
 
-    <!-- Celebration Overlay -->
+    <!-- Party Celebration -->
     <div class="celebration" id="celebration">
         <div class="celebration-text">🎉 انكشفت كل المفاجآت! 🎉<br>عيد ميلاد سعيد يا قلبي 💖</div>
     </div>
@@ -252,7 +261,7 @@
         let completedActivities = 0;
         const celebration = document.getElementById('celebration');
         
-        document.querySelectorAll('.scratch-overlay').forEach((overlay, index) => {
+        document.querySelectorAll('.scratch-overlay').forEach((overlay) => {
             const canvas = overlay.querySelector('canvas');
             const contentText = overlay.parentElement.querySelector('.content-text');
             const scratchText = overlay.querySelector('.scratch-text');
@@ -263,9 +272,8 @@
             let isRevealed = false;
             
             function resizeCanvas() {
-                const rect = overlay.getBoundingClientRect();
-                canvas.width = rect.width;
-                canvas.height = rect.height;
+                canvas.width = overlay.offsetWidth;
+                canvas.height = overlay.offsetHeight;
                 drawScratchLayer();
             }
             
@@ -309,21 +317,9 @@
                 overlay.style.pointerEvents = 'none';
                 
                 completedActivities++;
-                createFirework(overlay);
-                
                 if (completedActivities === totalActivities) {
-                    setTimeout(() => showFinalCelebration(), 500);
+                    setTimeout(() => showPartyCelebration(), 500);
                 }
-            }
-
-            function createFirework(element) {
-                const rect = element.getBoundingClientRect();
-                const firework = document.createElement('div');
-                firework.className = 'fireworks';
-                firework.style.left = rect.left + rect.width / 2 + 'px';
-                firework.style.top = rect.top + rect.height / 2 + 'px';
-                document.body.appendChild(firework);
-                setTimeout(() => firework.remove(), 1500);
             }
 
             function scratch(x, y) {
@@ -347,6 +343,7 @@
                 }
             }
 
+            // Mouse events
             canvas.addEventListener('mousedown', (e) => {
                 if (isRevealed) return;
                 isDrawing = true;
@@ -366,6 +363,8 @@
             });
             canvas.addEventListener('mouseup', () => isDrawing = false);
             canvas.addEventListener('mouseleave', () => isDrawing = false);
+
+            // Touch events
             canvas.addEventListener('touchstart', (e) => {
                 if (isRevealed) return;
                 isDrawing = true;
@@ -387,18 +386,20 @@
             canvas.addEventListener('touchcancel', () => isDrawing = false);
         });
 
-        function showFinalCelebration() {
+        function showPartyCelebration() {
             celebration.classList.add('show');
-            for (let i = 0; i < 30; i++) {
+            
+            // Party Confetti - 100 قطعة!
+            for (let i = 0; i < 100; i++) {
                 setTimeout(() => {
-                    const firework = document.createElement('div');
-                    firework.className = 'fireworks';
-                    firework.style.left = Math.random() * 100 + 'vw';
-                    firework.style.top = Math.random() * 100 + 'vh';
-                    firework.style.background = `hsl(${Math.random() * 360}, 100%, 60%)`;
-                    document.body.appendChild(firework);
-                    setTimeout(() => firework.remove(), 1500);
-                }, i * 100);
+                    const confetti = document.createElement('div');
+                    confetti.className = 'confetti';
+                    confetti.style.left = Math.random() * 100 + 'vw';
+                    confetti.style.animationDelay = Math.random() * 3 + 's';
+                    confetti.style.animationDuration = (Math.random() * 3 + 2) + 's';
+                    document.body.appendChild(confetti);
+                    setTimeout(() => confetti.remove(), 5000);
+                }, i * 20);
             }
         }
     </script>

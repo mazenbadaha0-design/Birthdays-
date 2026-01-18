@@ -101,7 +101,7 @@
             transition: opacity 0.5s ease;
         }
         
-        /* Party Confetti Effect */
+        /* Party Confetti Effect - لكل Activity */
         .celebration {
             position: fixed;
             top: 0;
@@ -111,18 +111,20 @@
             pointer-events: none;
             z-index: 1000;
             opacity: 0;
+            transition: opacity 0.3s ease;
         }
         .celebration.show {
             opacity: 1;
         }
         .confetti {
             position: absolute;
-            width: 12px;
-            height: 12px;
+            width: 10px;
+            height: 10px;
             background: #ffd700;
-            animation: confetti-fall 3s linear infinite;
+            animation: confetti-fall 2.5s linear infinite;
             pointer-events: none;
             transform-origin: center;
+            border-radius: 50%;
         }
         .confetti:nth-child(odd) { background: #ff6b9d; }
         .confetti:nth-child(3n) { background: #4ecdc4; }
@@ -130,15 +132,34 @@
         .confetti:nth-child(5n) { background: #f9ca24; }
         @keyframes confetti-fall {
             0% {
-                transform: translateY(-100vh) rotate(0deg);
+                transform: translateY(-100vh) rotate(0deg) scale(0);
                 opacity: 1;
             }
+            50% {
+                opacity: 1;
+                transform: scale(1);
+            }
             100% {
-                transform: translateY(100vh) rotate(720deg);
+                transform: translateY(100vh) rotate(720deg) scale(0);
                 opacity: 0;
             }
         }
-        .celebration-text {
+        
+        /* Final Celebration - مختلف شوي */
+        .final-celebration {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100vw;
+            height: 100vh;
+            pointer-events: none;
+            z-index: 1001;
+            opacity: 0;
+        }
+        .final-celebration.show {
+            opacity: 1;
+        }
+        .final-celebration-text {
             position: absolute;
             top: 50%;
             left: 50%;
@@ -150,14 +171,15 @@
             animation: bounce 1s ease-in-out infinite;
             pointer-events: none;
             text-align: center;
-            background: rgba(255,255,255,0.9);
-            padding: 20px 40px;
+            background: rgba(255,255,255,0.95);
+            padding: 25px 50px;
             border-radius: 30px;
-            box-shadow: 0 10px 30px rgba(0,0,0,0.3);
+            box-shadow: 0 15px 40px rgba(0,0,0,0.4);
+            border: 3px solid #ffd700;
         }
         @keyframes bounce {
             0%, 100% { transform: translate(-50%, -50%) scale(1); }
-            50% { transform: translate(-50%, -50%) scale(1.1); }
+            50% { transform: translate(-50%, -50%) scale(1.15); }
         }
         
         @media (max-width: 400px) {
@@ -166,7 +188,7 @@
             .scratch-text { font-size: 18px; }
             .content-text { font-size: 13px; padding: 12px; }
             h1 { font-size: 24px; }
-            .celebration-text { font-size: 28px; padding: 15px 25px; }
+            .final-celebration-text { font-size: 28px; padding: 20px 30px; }
         }
     </style>
 </head>
@@ -251,15 +273,20 @@
         </div>
     </div>
 
-    <!-- Party Celebration -->
+    <!-- Party Celebration لكل Activity -->
     <div class="celebration" id="celebration">
-        <div class="celebration-text">🎉 انكشفت كل المفاجآت! 🎉<br>عيد ميلاد سعيد يا قلبي 💖</div>
+    </div>
+    
+    <!-- Final Celebration -->
+    <div class="final-celebration" id="finalCelebration">
+        <div class="final-celebration-text">🎉 انكشفت كل المفاجآت! 🎉<br>عيد ميلاد سعيد يا قلبي 💖</div>
     </div>
 
     <script>
         let totalActivities = 7;
         let completedActivities = 0;
         const celebration = document.getElementById('celebration');
+        const finalCelebration = document.getElementById('finalCelebration');
         
         document.querySelectorAll('.scratch-overlay').forEach((overlay) => {
             const canvas = overlay.querySelector('canvas');
@@ -270,6 +297,7 @@
             let isDrawing = false;
             let strokeCount = 0;
             let isRevealed = false;
+            const REQUIRED_STROKES = 20; // ✅ زيادة عدد الضربات للواقعية
             
             function resizeCanvas() {
                 canvas.width = overlay.offsetWidth;
@@ -307,6 +335,29 @@
                 };
             }
 
+            function showMiniParty() {
+                // 🎉 Party effect بعد كل activity
+                celebration.classList.add('show');
+                
+                // 50 قطعة confetti لكل activity
+                for (let i = 0; i < 50; i++) {
+                    setTimeout(() => {
+                        const confetti = document.createElement('div');
+                        confetti.className = 'confetti';
+                        confetti.style.left = Math.random() * 100 + 'vw';
+                        confetti.style.animationDelay = Math.random() * 2 + 's';
+                        confetti.style.animationDuration = (Math.random() * 2 + 1.5) + 's';
+                        document.body.appendChild(confetti);
+                        setTimeout(() => confetti.remove(), 4000);
+                    }, i * 30);
+                }
+                
+                // إخفاء الـ party بعد 3 ثواني
+                setTimeout(() => {
+                    celebration.classList.remove('show');
+                }, 3000);
+            }
+
             function revealAll() {
                 if (isRevealed) return;
                 isRevealed = true;
@@ -317,28 +368,30 @@
                 overlay.style.pointerEvents = 'none';
                 
                 completedActivities++;
+                showMiniParty(); // ✅ Party بعد كل activity
+                
                 if (completedActivities === totalActivities) {
-                    setTimeout(() => showPartyCelebration(), 500);
+                    setTimeout(() => showFinalCelebration(), 1000);
                 }
             }
 
             function scratch(x, y) {
                 ctx.globalCompositeOperation = 'destination-out';
-                ctx.lineWidth = 60;
+                ctx.lineWidth = 45; // ✅ شوي أصغر عشان الواقعية مع العدد الأكبر
                 ctx.lineCap = 'round';
                 ctx.lineJoin = 'round';
                 ctx.beginPath();
-                ctx.arc(x, y, 35, 0, 2 * Math.PI);
+                ctx.arc(x, y, 25, 0, 2 * Math.PI); // ✅ دائرة أصغر
                 ctx.fill();
             }
 
             function checkProgress() {
-                const progress = strokeCount / 8;
-                const fade = Math.max(0.1, 1 - progress * 0.12);
+                const progress = strokeCount / REQUIRED_STROKES;
+                const fade = Math.max(0.1, 1 - progress * 0.08); // ✅ fade أبطأ
                 overlay.style.opacity = fade;
                 scratchText.style.opacity = fade;
                 
-                if (strokeCount >= 8) {
+                if (strokeCount >= REQUIRED_STROKES) {
                     revealAll();
                 }
             }
@@ -386,20 +439,22 @@
             canvas.addEventListener('touchcancel', () => isDrawing = false);
         });
 
-        function showPartyCelebration() {
-            celebration.classList.add('show');
+        function showFinalCelebration() {
+            finalCelebration.classList.add('show');
             
-            // Party Confetti - 100 قطعة!
+            // Final celebration مع 100 قطعة confetti كبيرة!
             for (let i = 0; i < 100; i++) {
                 setTimeout(() => {
                     const confetti = document.createElement('div');
                     confetti.className = 'confetti';
                     confetti.style.left = Math.random() * 100 + 'vw';
+                    confetti.style.width = '14px';
+                    confetti.style.height = '14px';
                     confetti.style.animationDelay = Math.random() * 3 + 's';
-                    confetti.style.animationDuration = (Math.random() * 3 + 2) + 's';
+                    confetti.style.animationDuration = (Math.random() * 3 + 2.5) + 's';
                     document.body.appendChild(confetti);
-                    setTimeout(() => confetti.remove(), 5000);
-                }, i * 20);
+                    setTimeout(() => confetti.remove(), 6000);
+                }, i * 25);
             }
         }
     </script>

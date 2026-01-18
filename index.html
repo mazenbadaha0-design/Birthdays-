@@ -33,6 +33,7 @@
             margin: 12px 0;
             width: 340px;
             box-shadow: 0 10px 30px rgba(0,0,0,0.2);
+            position: relative;
         }
         .activity-title {
             background: #ff8fb1;
@@ -101,85 +102,143 @@
             transition: opacity 0.5s ease;
         }
         
-        /* Party Confetti Effect - لكل Activity */
-        .celebration {
+        /* Box-specific Confetti */
+        .box-confetti {
             position: fixed;
-            top: 0;
-            left: 0;
-            width: 100vw;
-            height: 100vh;
             pointer-events: none;
-            z-index: 1000;
-            opacity: 0;
-            transition: opacity 0.3s ease;
+            z-index: 1002;
+            width: 12px;
+            height: 12px;
+            border-radius: 2px;
+            animation: boxConfettiBurst 2s ease-out forwards;
         }
-        .celebration.show {
-            opacity: 1;
-        }
-        .confetti {
-            position: absolute;
-            width: 10px;
-            height: 10px;
-            background: #ffd700;
-            animation: confetti-fall 2.5s linear infinite;
-            pointer-events: none;
-            transform-origin: center;
-            border-radius: 50%;
-        }
-        .confetti:nth-child(odd) { background: #ff6b9d; }
-        .confetti:nth-child(3n) { background: #4ecdc4; }
-        .confetti:nth-child(4n) { background: #45b7d1; }
-        .confetti:nth-child(5n) { background: #f9ca24; }
-        @keyframes confetti-fall {
+        .box-confetti:nth-child(odd) { background: #ff6b9d; }
+        .box-confetti:nth-child(3n) { background: #4ecdc4; }
+        .box-confetti:nth-child(4n) { background: #45b7d1; }
+        .box-confetti:nth-child(5n) { background: #f9ca24; }
+        .box-confetti:nth-child(6n) { background: #ffd700; }
+        
+        @keyframes boxConfettiBurst {
             0% {
-                transform: translateY(-100vh) rotate(0deg) scale(0);
+                transform: translate(0, 0) scale(0) rotate(0deg);
                 opacity: 1;
             }
-            50% {
+            10% {
+                transform: scale(1.2) rotate(180deg);
                 opacity: 1;
-                transform: scale(1);
             }
             100% {
-                transform: translateY(100vh) rotate(720deg) scale(0);
+                transform: translate(var(--dx), var(--dy)) scale(0) rotate(720deg);
                 opacity: 0;
             }
         }
         
-        /* Final Celebration - مختلف شوي */
-        .final-celebration {
+        /* 🔥 ULTIMATE FINAL CELEBRATION 🔥 */
+        .ultimate-celebration {
             position: fixed;
             top: 0;
             left: 0;
             width: 100vw;
             height: 100vh;
             pointer-events: none;
-            z-index: 1001;
+            z-index: 1003;
             opacity: 0;
+            background: radial-gradient(circle, rgba(255,215,0,0.3) 0%, transparent 70%);
         }
-        .final-celebration.show {
+        .ultimate-celebration.show {
             opacity: 1;
         }
-        .final-celebration-text {
+        
+        /* النجوم المتلألئة */
+        .star {
             position: absolute;
-            top: 50%;
+            width: 4px;
+            height: 4px;
+            background: #ffd700;
+            border-radius: 50%;
+            animation: starTwinkle 2s ease-in-out infinite alternate;
+            box-shadow: 0 0 10px #ffd700;
+        }
+        
+        /* Hearts Explosion */
+        .heart {
+            position: absolute;
+            font-size: 20px;
+            pointer-events: none;
+            animation: heartFloat 3s ease-out forwards;
+        }
+        
+        /* الرسالة الرئيسية */
+        .main-message {
+            position: absolute;
+            top: 40%;
             left: 50%;
             transform: translate(-50%, -50%);
-            font-size: 36px;
+            font-size: 48px;
             font-weight: bold;
-            color: #ffd700;
-            text-shadow: 0 0 20px #ffd700;
-            animation: bounce 1s ease-in-out infinite;
-            pointer-events: none;
+            color: #ff1493;
+            text-shadow: 0 0 30px #ff1493, 0 0 60px #ff69b4;
             text-align: center;
-            background: rgba(255,255,255,0.95);
-            padding: 25px 50px;
-            border-radius: 30px;
-            box-shadow: 0 15px 40px rgba(0,0,0,0.4);
-            border: 3px solid #ffd700;
+            background: rgba(255,255,255,0.98);
+            padding: 40px 60px;
+            border-radius: 50px;
+            box-shadow: 0 20px 60px rgba(255,20,147,0.4);
+            border: 5px solid #ffd700;
+            animation: epicBounce 1.5s ease-in-out infinite;
+            opacity: 0;
         }
-        @keyframes bounce {
-            0%, 100% { transform: translate(-50%, -50%) scale(1); }
-            50% { transform: translate(-50%, -50%) scale(1.15); }
+        
+        /* الرسائل الإضافية */
+        .sub-messages {
+            position: absolute;
+            top: 65%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            font-size: 24px;
+            color: #fff;
+            text-shadow: 2px 2px 10px rgba(0,0,0,0.8);
+            text-align: center;
+            opacity: 0;
+            animation: fadeInUp 1s ease-out 2s forwards;
+        }
+        
+        @keyframes starTwinkle {
+            0% { opacity: 0.3; transform: scale(1); }
+            100% { opacity: 1; transform: scale(1.5); }
+        }
+        
+        @keyframes heartFloat {
+            0% {
+                transform: translate(0, 0) rotate(0deg) scale(0);
+                opacity: 1;
+            }
+            50% {
+                transform: scale(1.3) rotate(180deg);
+                opacity: 1;
+            }
+            100% {
+                transform: translate(var(--dx), var(--dy)) rotate(720deg) scale(0);
+                opacity: 0;
+            }
+        }
+        
+        @keyframes epicBounce {
+            0%, 100% { 
+                transform: translate(-50%, -50%) scale(1) rotate(0deg); 
+            }
+            25% { 
+                transform: translate(-50%, -50%) scale(1.2) rotate(5deg); 
+            }
+            75% { 
+                transform: translate(-50%, -50%) scale(1.2) rotate(-5deg); 
+            }
+        }
+        
+        @keyframes fadeInUp {
+            to {
+                opacity: 1;
+                transform: translate(-50%, -50%) translateY(-20px);
+            }
         }
         
         @media (max-width: 400px) {
@@ -188,15 +247,16 @@
             .scratch-text { font-size: 18px; }
             .content-text { font-size: 13px; padding: 12px; }
             h1 { font-size: 24px; }
-            .final-celebration-text { font-size: 28px; padding: 20px 30px; }
+            .main-message { font-size: 32px; padding: 30px 40px; }
+            .sub-messages { font-size: 20px; }
         }
     </style>
 </head>
 <body>
     <h1>عيد ميلاد سعيد يا قلبي! اكشطي كل Activity واكتشفي اليوم المثالي 💕</h1>
 
-    <!-- الـ7 Activities كاملة -->
-    <div class="activity-card">
+    <!-- الـ7 Activities (نفس الكود السابق) -->
+    <div class="activity-card" data-activity="1">
         <div class="activity-title">Activity 1</div>
         <div class="activity">
             <div class="content-text">نروح نتغدى بـ"لازورد" 🥰<br>مثل أول ديت بتاعنا</div>
@@ -207,7 +267,7 @@
         </div>
     </div>
 
-    <div class="activity-card">
+    <div class="activity-card" data-activity="2">
         <div class="activity-title">Activity 2</div>
         <div class="activity">
             <div class="content-text">هدية عيد ميلادك 🎁<br>مفاجأة خاصة بيكِ</div>
@@ -218,7 +278,7 @@
         </div>
     </div>
 
-    <div class="activity-card">
+    <div class="activity-card" data-activity="3">
         <div class="activity-title">Activity 3</div>
         <div class="activity">
             <div class="content-text">نلف بالسيارة ونغني سوا 🎶<br>أغانينا المفضلة</div>
@@ -229,7 +289,7 @@
         </div>
     </div>
 
-    <div class="activity-card">
+    <div class="activity-card" data-activity="4">
         <div class="activity-title">Activity 4</div>
         <div class="activity">
             <div class="content-text">نوخذ سبانيش لاتيه ☕<br>مع كيكة لذيذة</div>
@@ -240,7 +300,7 @@
         </div>
     </div>
 
-    <div class="activity-card">
+    <div class="activity-card" data-activity="5">
         <div class="activity-title">Activity 5</div>
         <div class="activity">
             <div class="content-text">نحضر فيديو سوا 📹<br>ع المطل مع الغروب</div>
@@ -251,7 +311,7 @@
         </div>
     </div>
 
-    <div class="activity-card">
+    <div class="activity-card" data-activity="6">
         <div class="activity-title">Activity 6</div>
         <div class="activity">
             <div class="content-text">نوكل دوناتس 🍩<br>أحلى دوناتس بالعالم</div>
@@ -262,7 +322,7 @@
         </div>
     </div>
 
-    <div class="activity-card">
+    <div class="activity-card" data-activity="7">
         <div class="activity-title">Activity 7</div>
         <div class="activity">
             <div class="content-text">نروح عنا على الدار 🏠<br>نرتاح ونستانس سوا</div>
@@ -273,31 +333,39 @@
         </div>
     </div>
 
-    <!-- Party Celebration لكل Activity -->
-    <div class="celebration" id="celebration">
-    </div>
-    
-    <!-- Final Celebration -->
-    <div class="final-celebration" id="finalCelebration">
-        <div class="final-celebration-text">🎉 انكشفت كل المفاجآت! 🎉<br>عيد ميلاد سعيد يا قلبي 💖</div>
+    <!-- 🔥 ULTIMATE CELEBRATION 🔥 -->
+    <div class="ultimate-celebration" id="ultimateCelebration">
+        <div class="main-message" id="mainMessage">
+            🎉❤️ عيد ميلاد سعيد يا قلبي! ❤️🎉<br>
+            أنتِ أحلى شي بحياتي 💖✨
+        </div>
+        <div class="sub-messages" id="subMessages">
+            كل سنة وانتِ طيبة يا روحي 🥰<br>
+            بحبك أكتر من الكون كله! 🌟💕
+        </div>
     </div>
 
     <script>
         let totalActivities = 7;
         let completedActivities = 0;
-        const celebration = document.getElementById('celebration');
-        const finalCelebration = document.getElementById('finalCelebration');
+        const ultimateCelebration = document.getElementById('ultimateCelebration');
+        const mainMessage = document.getElementById('mainMessage');
+        const subMessages = document.getElementById('subMessages');
         
-        document.querySelectorAll('.scratch-overlay').forEach((overlay) => {
+        // نفس كود الـ scratch السابق مع showBoxConfetti()
+        document.querySelectorAll('.scratch-overlay').forEach((overlay, index) => {
             const canvas = overlay.querySelector('canvas');
             const contentText = overlay.parentElement.querySelector('.content-text');
             const scratchText = overlay.querySelector('.scratch-text');
+            const activityCard = overlay.closest('.activity-card');
             const ctx = canvas.getContext('2d');
             
             let isDrawing = false;
             let strokeCount = 0;
             let isRevealed = false;
-            const REQUIRED_STROKES = 20; // ✅ زيادة عدد الضربات للواقعية
+            const REQUIRED_STROKES = 20;
+            
+            // ... نفس functions السابقة (resizeCanvas, drawScratchLayer, getPos, scratch, checkProgress)
             
             function resizeCanvas() {
                 canvas.width = overlay.offsetWidth;
@@ -335,27 +403,25 @@
                 };
             }
 
-            function showMiniParty() {
-                // 🎉 Party effect بعد كل activity
-                celebration.classList.add('show');
+            function showBoxConfetti() {
+                const rect = activityCard.getBoundingClientRect();
+                const centerX = rect.left + rect.width / 2;
+                const centerY = rect.top + rect.height / 2;
                 
-                // 50 قطعة confetti لكل activity
-                for (let i = 0; i < 50; i++) {
-                    setTimeout(() => {
-                        const confetti = document.createElement('div');
-                        confetti.className = 'confetti';
-                        confetti.style.left = Math.random() * 100 + 'vw';
-                        confetti.style.animationDelay = Math.random() * 2 + 's';
-                        confetti.style.animationDuration = (Math.random() * 2 + 1.5) + 's';
-                        document.body.appendChild(confetti);
-                        setTimeout(() => confetti.remove(), 4000);
-                    }, i * 30);
+                for (let i = 0; i < 60; i++) {
+                    const confetti = document.createElement('div');
+                    confetti.className = 'box-confetti';
+                    const angle = (Math.PI * 2 * i) / 60;
+                    const velocity = 120 + Math.random() * 80;
+                    const dx = Math.cos(angle) * velocity;
+                    const dy = Math.sin(angle) * velocity * 0.7;
+                    confetti.style.left = centerX + 'px';
+                    confetti.style.top = centerY + 'px';
+                    confetti.style.setProperty('--dx', dx + 'px');
+                    confetti.style.setProperty('--dy', dy + 'px');
+                    document.body.appendChild(confetti);
+                    setTimeout(() => confetti.remove(), 2000);
                 }
-                
-                // إخفاء الـ party بعد 3 ثواني
-                setTimeout(() => {
-                    celebration.classList.remove('show');
-                }, 3000);
             }
 
             function revealAll() {
@@ -368,26 +434,26 @@
                 overlay.style.pointerEvents = 'none';
                 
                 completedActivities++;
-                showMiniParty(); // ✅ Party بعد كل activity
+                showBoxConfetti();
                 
                 if (completedActivities === totalActivities) {
-                    setTimeout(() => showFinalCelebration(), 1000);
+                    setTimeout(() => showUltimateCelebration(), 1500);
                 }
             }
 
             function scratch(x, y) {
                 ctx.globalCompositeOperation = 'destination-out';
-                ctx.lineWidth = 45; // ✅ شوي أصغر عشان الواقعية مع العدد الأكبر
+                ctx.lineWidth = 45;
                 ctx.lineCap = 'round';
                 ctx.lineJoin = 'round';
                 ctx.beginPath();
-                ctx.arc(x, y, 25, 0, 2 * Math.PI); // ✅ دائرة أصغر
+                ctx.arc(x, y, 25, 0, 2 * Math.PI);
                 ctx.fill();
             }
 
             function checkProgress() {
                 const progress = strokeCount / REQUIRED_STROKES;
-                const fade = Math.max(0.1, 1 - progress * 0.08); // ✅ fade أبطأ
+                const fade = Math.max(0.1, 1 - progress * 0.08);
                 overlay.style.opacity = fade;
                 scratchText.style.opacity = fade;
                 
@@ -396,7 +462,7 @@
                 }
             }
 
-            // Mouse events
+            // Mouse & Touch events (نفس الكود السابق)
             canvas.addEventListener('mousedown', (e) => {
                 if (isRevealed) return;
                 isDrawing = true;
@@ -417,7 +483,6 @@
             canvas.addEventListener('mouseup', () => isDrawing = false);
             canvas.addEventListener('mouseleave', () => isDrawing = false);
 
-            // Touch events
             canvas.addEventListener('touchstart', (e) => {
                 if (isRevealed) return;
                 isDrawing = true;
@@ -439,23 +504,50 @@
             canvas.addEventListener('touchcancel', () => isDrawing = false);
         });
 
-        function showFinalCelebration() {
-            finalCelebration.classList.add('show');
+        // 🔥 الاحتفال الأسطوري النهائي 🔥
+        function showUltimateCelebration() {
+            ultimateCelebration.classList.add('show');
             
-            // Final celebration مع 100 قطعة confetti كبيرة!
+            // 1. نجوم تلمع في الخلفية
             for (let i = 0; i < 100; i++) {
-                setTimeout(() => {
-                    const confetti = document.createElement('div');
-                    confetti.className = 'confetti';
-                    confetti.style.left = Math.random() * 100 + 'vw';
-                    confetti.style.width = '14px';
-                    confetti.style.height = '14px';
-                    confetti.style.animationDelay = Math.random() * 3 + 's';
-                    confetti.style.animationDuration = (Math.random() * 3 + 2.5) + 's';
-                    document.body.appendChild(confetti);
-                    setTimeout(() => confetti.remove(), 6000);
-                }, i * 25);
+                const star = document.createElement('div');
+                star.className = 'star';
+                star.style.left = Math.random() * 100 + 'vw';
+                star.style.top = Math.random() * 100 + 'vh';
+                star.style.animationDelay = Math.random() * 2 + 's';
+                document.body.appendChild(star);
+                setTimeout(() => star.remove(), 10000);
             }
+            
+            // 2. الرسالة الرئيسية تظهر بتأثير مذهل
+            setTimeout(() => {
+                mainMessage.style.opacity = '1';
+                mainMessage.style.animation = 'epicBounce 1.5s ease-in-out infinite';
+            }, 500);
+            
+            // 3. قلوب تفقع من كل مكان!
+            setTimeout(() => {
+                for (let i = 0; i < 80; i++) {
+                    const heart = document.createElement('div');
+                    heart.className = 'heart';
+                    heart.innerHTML = ['💖', '💕', '💗', '🥰', '✨'][Math.floor(Math.random() * 5)];
+                    heart.style.left = Math.random() * 100 + 'vw';
+                    heart.style.top = '90vh';
+                    const velocity = 200 + Math.random() * 150;
+                    const dx = (Math.random() - 0.5) * 400;
+                    const dy = -velocity;
+                    heart.style.setProperty('--dx', dx + 'px');
+                    heart.style.setProperty('--dy', dy + 'px');
+                    heart.style.animationDelay = Math.random() * 0.5 + 's';
+                    document.body.appendChild(heart);
+                    setTimeout(() => heart.remove(), 4000);
+                }
+            }, 1500);
+            
+            // 4. الرسائل الإضافية
+            setTimeout(() => {
+                subMessages.style.opacity = '1';
+            }, 2500);
         }
     </script>
 </body>
